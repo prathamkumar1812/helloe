@@ -1,0 +1,28 @@
+name: Auto Format
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Prettier
+        run: npm install -g prettier
+
+      - name: Run Prettier
+        run: prettier --write "**/*.js"
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add .
+          git commit -m "Auto-format code" || echo "No changes to commit"
+          git push
